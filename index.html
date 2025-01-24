@@ -6,19 +6,11 @@
     <title>Unity WebGL Player | PFP Builder</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width="1600" height="900" tabindex="-1" style="width: 1600px; height: 900px; background: #231F20"></canvas>
-
-    <!-- File input for image upload -->
-    <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)" />
-
-    <button onclick="triggerImageUpload()">Upload Image</button>
-
+    <canvas id="unity-canvas" width=1600 height=900 tabindex="-1" style="width: 1600px; height: 900px; background: #231F20"></canvas>
     <script src="Build/PFP builds.loader.js"></script>
     <script>
-      let unityInstance;
-
-      // Mobile device style: fill the whole browser client area with the game canvas:
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
@@ -32,7 +24,6 @@
         document.body.style.textAlign = "left";
       }
 
-      // Initialize Unity WebGL
       createUnityInstance(document.querySelector("#unity-canvas"), {
         dataUrl: "Build/PFP builds.data",
         frameworkUrl: "Build/PFP builds.framework.js",
@@ -41,36 +32,9 @@
         companyName: "VXStudios",
         productName: "PFP Builder",
         productVersion: "1.0",
-      }).then((instance) => {
-        unityInstance = instance; // Assign Unity instance to the global variable
-        console.log("Unity Instance is ready!");
-      }).catch((error) => {
-        console.error("Error initializing Unity:", error);
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       });
-
-      // Trigger the file input for image upload
-      function triggerImageUpload() {
-        document.getElementById("file-input").click();
-      }
-
-      // Handle the image upload when a file is selected
-      function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const base64Image = e.target.result.split(',')[1]; // Extract base64 part
-
-          // Check if UnityInstance is ready and send the image to Unity
-          if (unityInstance) {
-            unityInstance.SendMessage('ImageUploader', 'OnImageUploaded', base64Image);
-          } else {
-            console.error("Unity instance is not ready.");
-          }
-        };
-        reader.readAsDataURL(file); // Read the file as base64
-      }
     </script>
   </body>
 </html>
