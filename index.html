@@ -6,7 +6,7 @@
     <title>Unity WebGL Player | PFP Builder</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=1600 height=900 tabindex="-1" style="width: 1600px; height: 900px; background: #231F20"></canvas>
+    <canvas id="unity-canvas" width="1600" height="900" tabindex="-1" style="width: 1600px; height: 900px; background: #231F20"></canvas>
     <script src="Build/PFP builds.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
@@ -24,6 +24,7 @@
         document.body.style.textAlign = "left";
       }
 
+      // Initialize Unity and assign the instance to window.UnityInstance
       createUnityInstance(document.querySelector("#unity-canvas"), {
         dataUrl: "Build/PFP builds.data",
         frameworkUrl: "Build/PFP builds.framework.js",
@@ -34,6 +35,10 @@
         productVersion: "1.0",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      }).then((unityInstance) => {
+        window.UnityInstance = unityInstance; // Assign the Unity instance globally
+      }).catch((message) => {
+        console.error("Failed to load Unity:", message);
       });
     </script>
   </body>
